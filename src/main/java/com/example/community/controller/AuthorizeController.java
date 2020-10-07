@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class AuthorizeController {
-
+/*aa*/
     @Autowired
     private GithubProvider githubProvider;
 
