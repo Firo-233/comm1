@@ -29,6 +29,7 @@ public class AuthorizeController {
 
     @Autowired
     UserMapper userMapper;
+
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
