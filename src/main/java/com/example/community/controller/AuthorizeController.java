@@ -38,15 +38,14 @@ public class AuthorizeController {
         GithubUser user = githubProvider.getUser(accessToken);
         System.out.println("".equals(user));
         System.out.println(user.getName());
-        return "index";
-       /* if (user != null) {
+        if (user != null) {
             //登录成功,写cookies和session
             request.getSession().setAttribute("user", user);
             return "redirect:/";
         } else {
             //登录失败,重新登录
             return "redirect:/";
-        }*/
+        }
 
     }
 }
