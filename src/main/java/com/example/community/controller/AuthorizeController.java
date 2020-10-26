@@ -30,7 +30,7 @@ public class AuthorizeController {
     private String redirectUri;
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
@@ -55,6 +55,7 @@ public class AuthorizeController {
             user.setAccount_Id(String.valueOf(githubUser.getId()));
             user.setGmt_Create(System.currentTimeMillis());
             user.setGmt_Modified(user.getGmt_Create());
+            user.setAvatar_url(githubUser.getAvatar_url());
             userMapper.insert(user);
 
             //登录成功,写cookies和session

@@ -18,18 +18,21 @@ public class IndexController {
     UserMapper userMapper;
 
     @GetMapping("/")
-    public String index(HttpServletRequest request){
+    public String index(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            //如果cookies里有一个叫token的，则取出它的数据查询
-            if (cookie.getName().equals("token")){
-                String token = cookie.getValue();
-                User user = userMapper.findByToken(token);
-                if (user != null) {
-                    request.getSession().setAttribute("user",user);
+        if (cookies != null && cookies.length != 0) {
+            for (Cookie cookie : cookies) {
+                //如果cookies里有一个叫token的，则取出它的数据查询
+                if (cookie.getName().equals("token")) {
+                    String token = cookie.getValue();
+                    User user = userMapper.findByToken(token);
+                    if (user != null) {
+                        request.getSession().setAttribute("user", user);
+                    }
+                    break;
                 }
-                break;
             }
+
         }
 
         return "index";
