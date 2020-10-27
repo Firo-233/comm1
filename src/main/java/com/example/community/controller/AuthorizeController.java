@@ -52,10 +52,10 @@ public class AuthorizeController {
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             user.setName(githubUser.getName());
-            user.setAccount_Id(String.valueOf(githubUser.getId()));
-            user.setGmt_Create(System.currentTimeMillis());
-            user.setGmt_Modified(user.getGmt_Create());
-            user.setAvatar_url(githubUser.getAvatar_url());
+            user.setAccountId(String.valueOf(githubUser.getId()));
+            user.setGmtCreate(System.currentTimeMillis());
+            user.setGmtModified(user.getGmtCreate());
+            user.setAvatarurl(githubUser.getAvatar_url());
             userMapper.insert(user);
 
             //登录成功,写cookies和session
