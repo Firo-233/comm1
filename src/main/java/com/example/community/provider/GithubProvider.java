@@ -44,14 +44,17 @@ public class GithubProvider  {
         try {
             Response response = client.newCall(request).execute();
             String string = response.body().string();
+            System.out.println(string + "响应体");
             GithubUser githubUser = JSON.parseObject(string, GithubUser.class);
-            System.out.println(githubUser);
+            System.out.println("ok--------------"+githubUser);
             return githubUser;
         } catch (Exception e) {
             return null;
         }
 
     }
+
+
 
 }
 

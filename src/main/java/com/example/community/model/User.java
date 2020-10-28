@@ -10,6 +10,6 @@ public class User {
     private String token;
     private Long gmtCreate;
     private Long gmtModified;
-    private String avatarurl;
+    private String avatarUrl;
 
 }
