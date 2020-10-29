@@ -7,6 +7,7 @@ import com.example.community.mapper.UserMapper;
 import com.example.community.model.Question;
 import com.example.community.model.User;
 import com.example.community.service.QuestionService;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,8 +26,8 @@ public class IndexController {
 
     @Autowired
     private QuestionService questionService;
-
-    @GetMapping("/")
+//传统方式分页
+  /*  @GetMapping("/")
     public String index(HttpServletRequest request,
                         Model model,
                         @RequestParam(name = "page", defaultValue = "1") Integer page,
@@ -47,6 +48,33 @@ public class IndexController {
         }
         PaginationDTO pagination = questionService.list(page,size);
         model.addAttribute("pagination", pagination);
+        return "index";
+    }*/
+
+    @GetMapping("/")
+    public String index(HttpServletRequest request,
+                        Model model,
+                        @RequestParam(name = "page", defaultValue = "1") Integer page,
+                        @RequestParam(name = "size", defaultValue = "3") Integer size) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null && cookies.length != 0) {
+            for (Cookie cookie : cookies) {
+                //如果cookies里有一个叫token的，则取出它的数据查询
+                if (cookie.getName().equals("token")) {
+                    String token = cookie.getValue();
+                    User user = userMapper.findByToken(token);
+                    if (user != null) {
+                        request.getSession().setAttribute("user", user);
+                    }
+                    break;
+                }
+            }
+        }
+        List<QuestionDTO> questionDTOList = questionService.list(page, size);
+        model.addAttribute("questions",questionDTOList);
+
+        PageInfo pageInfo = new PageInfo(questionDTOList,3);
+        model.addAttribute("pageInfo", pageInfo);
         return "index";
     }
 

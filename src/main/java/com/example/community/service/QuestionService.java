@@ -6,6 +6,8 @@ import com.example.community.mapper.QuestionMapper;
 import com.example.community.mapper.UserMapper;
 import com.example.community.model.Question;
 import com.example.community.model.User;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +24,8 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
 
-
-    public PaginationDTO list(Integer page, Integer size) {
+//传统方式分页
+  /*  public PaginationDTO list(Integer page, Integer size) {
 
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer totalCount = questionMapper.count();
@@ -51,6 +53,12 @@ public class QuestionService {
         }
         paginationDTO.setQuestions(questionDTOList);
         return paginationDTO;
+    }*/
+
+    public List<QuestionDTO> list(Integer page, Integer size) {
+        PageHelper.startPage(page,size);
+        List<QuestionDTO> questions = questionMapper.findAll();
+        return questions;
     }
 
 }
