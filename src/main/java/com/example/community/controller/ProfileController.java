@@ -19,9 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 public class ProfileController {
 
     @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
     private QuestionService questionService;
 
     @GetMapping("/profile/{action}")

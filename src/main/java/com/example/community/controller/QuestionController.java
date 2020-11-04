@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class QuestionController {
 
     @Autowired
-    private QuestionMapper questionMapper;
-
-    @Autowired
     private QuestionService questionService;
 
 
