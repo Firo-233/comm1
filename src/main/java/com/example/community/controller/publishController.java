@@ -1,13 +1,16 @@
 package com.example.community.controller;
 
+import com.example.community.dto.QuestionDTO;
 import com.example.community.mapper.QuestionMapper;
 import com.example.community.mapper.UserMapper;
 import com.example.community.model.Question;
 import com.example.community.model.User;
+import com.example.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -21,7 +24,22 @@ public class publishController {
     private QuestionMapper questionMapper;
 
     @Autowired
+    private QuestionService questionService;
+
+    @Autowired
     private UserMapper userMapper;
+
+    @GetMapping("/publish/{id}")
+    public String edit(@PathVariable(name = "id") Integer id,
+                       Model model){
+        QuestionDTO questionDTO = questionService.getById(id);
+        model.addAttribute("title", questionDTO.getTitle());
+        model.addAttribute("description", questionDTO.getDescription());
+        model.addAttribute("tag", questionDTO.getTag());
+        model.addAttribute("id",questionDTO.getId());
+
+        return "publish";
+    }
 
     //如果是get就渲染页面
     @GetMapping("/publish")
@@ -31,17 +49,15 @@ public class publishController {
 
     //如果是post就执行请求
     @PostMapping("/publish")
-    public String doPublish(
-            @RequestParam("title") String title,
-            @RequestParam("description") String description,
-            @RequestParam("tag") String tag,
-            HttpServletRequest request,
-            Model model) {
-
+    public String doPublish(@RequestParam(value = "title",required = false) String title,
+                            @RequestParam(value = "description",required = false) String description,
+                            @RequestParam(value = "tag",required = false) String tag,
+                            @RequestParam(value = "id",required = false) Integer id,
+                            HttpServletRequest request,
+                            Model model) {
         model.addAttribute("title", title);
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
-
 
         if (title == null || title == "") {
             model.addAttribute("error", "标题不能为空");
@@ -56,23 +72,7 @@ public class publishController {
             return "publish";
         }
 
-
-
-        User user = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length != 0) {
-            for (Cookie cookie : cookies) {
-                //如果cookies里有一个叫token的，则取出它的数据查询
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                    user = userMapper.findByToken(token);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
-                    }
-                    break;
-                }
-            }
-        }
+        User user = (User) request.getSession().getAttribute("user");
 
         if (user == null) {
             model.addAttribute("error", "用户未登录");
@@ -85,9 +85,9 @@ public class publishController {
         question.setDescription(description);
         question.setTag(tag);
         question.setCreator(user.getId());
-        question.setGmtCreate(System.currentTimeMillis());
-        question.setGmtModified(question.getGmtCreate());
-        questionMapper.create(question);
+
+        question.setId(id);
+        questionService.createOrUpdate(question);
         return "redirect:/";
     }
 }

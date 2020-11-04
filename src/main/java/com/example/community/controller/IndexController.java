@@ -22,30 +22,14 @@ import java.util.List;
 public class IndexController {
 
     @Autowired
-    UserMapper userMapper;
-
-    @Autowired
     private QuestionService questionService;
 //传统方式分页
-  /*  @GetMapping("/")
+   /* @GetMapping("/")
     public String index(HttpServletRequest request,
                         Model model,
                         @RequestParam(name = "page", defaultValue = "1") Integer page,
                         @RequestParam(name = "size", defaultValue = "5") Integer size) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length != 0) {
-            for (Cookie cookie : cookies) {
-                //如果cookies里有一个叫token的，则取出它的数据查询
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                    User user = userMapper.findByToken(token);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
-                    }
-                    break;
-                }
-            }
-        }
+
         PaginationDTO pagination = questionService.list(page,size);
         model.addAttribute("pagination", pagination);
         return "index";
@@ -56,23 +40,8 @@ public class IndexController {
                         Model model,
                         @RequestParam(name = "page", defaultValue = "1") Integer page,
                         @RequestParam(name = "size", defaultValue = "3") Integer size) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length != 0) {
-            for (Cookie cookie : cookies) {
-                //如果cookies里有一个叫token的，则取出它的数据查询
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                    User user = userMapper.findByToken(token);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
-                    }
-                    break;
-                }
-            }
-        }
         List<QuestionDTO> questionDTOList = questionService.list(page, size);
         model.addAttribute("questions",questionDTOList);
-
         PageInfo pageInfo = new PageInfo(questionDTOList,3);
         model.addAttribute("pageInfo", pageInfo);
         return "index";

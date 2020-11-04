@@ -4,6 +4,10 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * 分页类
+ */
 @Data
 public class PaginationDTO {
     private List<QuestionDTO> questions;

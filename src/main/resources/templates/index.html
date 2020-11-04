@@ -5,74 +5,20 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
     <!-- Bootstrap -->
-   <!-- <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-theme.min.css.map" rel="stylesheet">
-    <script src="../static/jquery/jquery-3.3.1.min.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>-->
-
-<!--    <link rel="stylesheet" href="css/bootstrap.min.css">-->
-<!--    <link rel="stylesheet" href="css/bootstrap-theme.min.css">-->
 
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
     <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-
-
     <!--引入自己的css-->
-    <link rel="stylesheet" type="text/css" href="css/community.css">
+    <link rel="stylesheet" type="text/css" href="/css/community.css">
 
 </head>
 <body>
+<!--头部引用-->
+<div th:insert="navigation :: nav"></div>
 
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">麻将社区</a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-            <form class="navbar-form navbar-left">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="搜索话题">
-                </div>
-                <button type="submit" class="btn btn-default">提交</button>
-            </form>
-
-            <ul class="nav navbar-nav navbar-right">
-                <li th:if="${session.user != null}">
-                    <a href="/publish">发布</a>
-                </li>
-                <li class="dropdown" th:if="${session.user != null}">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="${session.user.getName()}"> <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">消息中心</a></li>
-                        <li><a href="#">个人中心</a></li>
-                        <li><a href="#">退出登录</a></li>
-                    </ul>
-                </li>
-                <li th:if="${session.user == null}">
-                <a href="https://github.com/login/oauth/authorize?client_id=18812e4c8d2f08d9ed6d&redirect_uri=http://localhost:8888/callback&scope=user&state=1">登录</a>
-
-                </li>
-            </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-</nav>
-
-<div class="container-fluid">
-
+<div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span> &nbsp;发 现 </h2>
@@ -82,11 +28,12 @@
                 <div class="media-left">
                     <a href="#">
                         <img class="media-object" th:src="${question.user.avatarUrl}">
-
                     </a>
                 </div>
                 <div class="media-body">
-                    <h4 class="media-heading" th:text="${question.title}"></h4>
+                    <h4 class="media-heading">
+                        <a th:href="@{'/question/'+ ${question.id}}" th:text="${question.title}"></a>
+                    </h4>
                     <span th:text="${question.description}"></span><br>
                     <span class="text-desc"><span th:text="${question.commentCount}"></span>个回复 ·<span
                             th:text="${question.viewCount}"></span>次浏览 ·<span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}">小时前</span></span>
@@ -124,7 +71,6 @@
                     <li th:each="page:${pagination.pages}" th:class="${pagination.page == page}? 'active' : ''">
                         <a th:href="@{/(page=${page})}" th:text="${page}"></a>
                     </li>
-
 
                     <li>
                         <a th:href="@{/(page=${pagination.totalPage})}" aria-label="Next">
@@ -170,7 +116,7 @@
 
 
 
-<script src="jquery/jquery-3.3.1.min.js"></script>
+<script src="/jquery/jquery-3.3.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <!--<script src="js/bootstrap.min.js"></script>-->
 </body>
