@@ -1,3 +1,4 @@
+/*
 package com.example.community.controller;
 
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -46,3 +47,4 @@ public class CustomizeErrorController implements ErrorController {
         }
     }
 }
+*/

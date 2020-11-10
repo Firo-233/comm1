@@ -30,7 +30,7 @@ public class publishController {
     private UserMapper userMapper;
 
     @GetMapping("/publish/{id}")
-    public String edit(@PathVariable(name = "id") Integer id,
+    public String edit(@PathVariable(name = "id") Long id,
                        Model model){
         QuestionDTO questionDTO = questionService.getById(id);
         model.addAttribute("title", questionDTO.getTitle());
@@ -52,7 +52,7 @@ public class publishController {
     public String doPublish(@RequestParam(value = "title",required = false) String title,
                             @RequestParam(value = "description",required = false) String description,
                             @RequestParam(value = "tag",required = false) String tag,
-                            @RequestParam(value = "id",required = false) Integer id,
+                            @RequestParam(value = "id",required = false) Long id,
                             HttpServletRequest request,
                             Model model) {
         model.addAttribute("title", title);
