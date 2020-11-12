@@ -12,6 +12,7 @@ import com.example.community.model.Question;
 import com.example.community.model.QuestionExample;
 import com.example.community.model.User;
 import com.github.pagehelper.PageHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionService {
@@ -100,6 +102,7 @@ public class QuestionService {
         QuestionExample example1 = new QuestionExample();
         example1.createCriteria()
                 .andCreatorEqualTo(userId);
+        example1.setOrderByClause("gmt_created desc");
         List<Question> questionList = questionMapper.selectByExampleWithRowbounds(example1,new RowBounds(offSet,size));
 
 
@@ -163,5 +166,38 @@ public class QuestionService {
         question.setId(id);
         question.setViewCount(1);
         questionExtMapper.incView(question);
+    }
+
+    public List<QuestionDTO> selectRelated(QuestionDTO queryDTO) {
+        if (StringUtils.isBlank(queryDTO.getTag())){
+            return new ArrayList<>();
+        }
+
+        String tag = queryDTO.getTag();
+        String replace = tag.replace(",", "|");
+
+        Question queryQuestion = new Question();
+        queryQuestion.setId(queryDTO.getId());
+        queryQuestion.setTag(replace);
+
+        List<Question> questions = questionExtMapper.selectRelated(queryQuestion);
+
+        List<QuestionDTO> questionDto = questions.stream().map(question -> {
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(question,questionDTO);
+            return questionDTO;
+        }).collect(Collectors.toList());
+/*
+        List<QuestionDTO> list = new ArrayList<>();
+
+        for (Question question1 : questions) {
+            User user = userMapper.selectByPrimaryKey(question1.getCreator());
+            QuestionDTO questionDTO1 = new QuestionDTO();
+            questionDTO1.setUser(user);
+            BeanUtils.copyProperties(question1,questionDTO1);
+            list.add(questionDTO1);
+        }*/
+
+        return questionDto;
     }
 }

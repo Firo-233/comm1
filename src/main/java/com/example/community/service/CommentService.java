@@ -1,9 +1,7 @@
 package com.example.community.service;
 
 
-import com.example.community.dto.CommentCreateDTO;
 import com.example.community.dto.CommentDTO;
-import com.example.community.dto.QuestionDTO;
 import com.example.community.enums.CommentTypeEnum;
 import com.example.community.exception.CustomizeErrorCode;
 import com.example.community.exception.CustomizeException;
@@ -76,12 +74,13 @@ public class CommentService {
     }
 
 
-    public List<CommentDTO> listByQuestion(Long id) {
-        //如果是问题，则根据问题id查询出所有的评论
+    public List<CommentDTO> listTargetId(Long id, CommentTypeEnum type) {
+        //如果是问题，则根据id和类型查询出所有的评论
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()
                 .andParentIdEqualTo(id)
-                .andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+                .andTypeEqualTo(type.getType());
+        commentExample.setOrderByClause("gmt_create desc");
         List<Comment> comments = commentMapper.selectByExample(commentExample);
         if (comments.size() == 0){
             return new ArrayList<>();
@@ -115,17 +114,7 @@ public class CommentService {
 }
 
 
-//            if (question == null) {
-//                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
-//            }
 
-
-//
-//            // 增加评论数
-//            Comment parentComment = new Comment();
-//            parentComment.setId(comment.getParentId());
-//            parentComment.setCommentCount(1);
-//            commentExtMapper.incCommentCount(parentComment);
 //
 //            // 创建通知
 //            createNotify(comment, dbComment.getCommentator(), commentator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT, question.getId());
@@ -160,40 +149,4 @@ public class CommentService {
 //        notification.setOuterTitle(outerTitle);
 //        notificationMapper.insert(notification);
 //    }
-//
-//    public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
-//        CommentExample commentExample = new CommentExample();
-//        commentExample.createCriteria()
-//                .andParentIdEqualTo(id)
-//                .andTypeEqualTo(type.getType());
-//        commentExample.setOrderByClause("gmt_create desc");
-//        List<Comment> comments = commentMapper.selectByExample(commentExample);
-//
-//        if (comments.size() == 0) {
-//            return new ArrayList<>();
-//        }
-//        // 获取去重的评论人
-//        Set<Long> commentators = comments.stream().map(comment -> comment.getCommentator()).collect(Collectors.toSet());
-//        List<Long> userIds = new ArrayList();
-//        userIds.addAll(commentators);
-//
-//
-//        // 获取评论人并转换为 Map
-//        UserExample userExample = new UserExample();
-//        userExample.createCriteria()
-//                .andIdIn(userIds);
-//        List<User> users = userMapper.selectByExample(userExample);
-//        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
-//
-//
-//        // 转换 comment 为 commentDTO
-//        List<CommentDTO> commentDTOS = comments.stream().map(comment -> {
-//            CommentDTO commentDTO = new CommentDTO();
-//            BeanUtils.copyProperties(comment, commentDTO);
-//            commentDTO.setUser(userMap.get(comment.getCommentator()));
-//            return commentDTO;
-//        }).collect(Collectors.toList());
-//
-//        return commentDTOS;
-//    }
-//}
+

@@ -7,7 +7,7 @@ import java.util.List;
 @Mapper
 public interface QuestionDTOMapper {
 
-    @Select("select * from question")
+    @Select("select * from question ORDER BY gmt_create desc")
     @Results(id ="QuestionDTO", value = {
             @Result(id = true,column = "id",property = "id"),
             @Result(column = "title",property = "title"),

@@ -1,4 +1,3 @@
-/*
 package com.example.community.controller;
 
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -11,8 +10,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * 处理CustomizeExceptionHandler handle不了的
+ */
 @Controller
-
+@RequestMapping({"${server.error.path:${error.path:/error}}"})
 public class CustomizeErrorController implements ErrorController {
 
     @Override
@@ -47,4 +49,3 @@ public class CustomizeErrorController implements ErrorController {
         }
     }
 }
-*/
